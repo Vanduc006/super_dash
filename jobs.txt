@@ -1,0 +1,18 @@
+Làm chức năng đăng bài, admin drashboard
+
+1.head requests gửi url, infor
+  </> có breadcum -> boostrap
+  </> url tệp 1,mutil
+    có title -> seo
+  </> nội dung đầu
+  </> danh mục, collections, thuật tìm kiếm -> cần cookie
+
+  </> phân trang: mô tả, thông số
+ ==> api, express, miễn phí máy chủ 
+
+2.xây texteditor ,rich
+  </> moudle miễn phí
+  </> chuyển từ text style -> html content
+  </> chứng chỉ dcma
+
+3.cookies, token lưu tiến trình
