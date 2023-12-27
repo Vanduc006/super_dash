@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Đăng Sản Phẩm</h1>
+    <p style="border-top: 2px solid #000;">Nhập tên sản phẩm</p>
+    <input type="text" placeholder="Product name" class="name-product">
+    <p style="border-top: 2px solid #000;">Tên nhãn hàng</p>
+    <input type="text" placeholder="Brand name" class="brand">
+    <p style="border-top: 2px solid #000;">Bộ sưu tập</p>
+    <input type="text" placeholder="Collections" class="collections">
+    <p style="border-top: 2px solid #000;">Hình ảnh</p>
+    <input type="text" placeholder="url1, url2" class="picture">
+    <p style="border-top: 2px solid #000;">Mô tả</p>
+    <input type="text" placeholder="Descriptions" class="descriptions">
+    <p style="border-top: 2px solid #000;">Thông số kĩ thuật</p>
+    <input type="text" placeholder="Spec Infor" class="infor"><br>
+    <input type="submit" value="Send / Gửi" style="margin-top: 10px;" class="send" onclick="PostToSheet()">
+    <script>
+        const SendBtn = document.querySelector('.send')
+        const NameProduct = document.querySelector('.name-product')
+        const Picture = document.querySelector('.picture')
+        const Brand =  document.querySelector('.brand')
+        const Collections =  document.querySelector('.collections')
+        const Descriptions =  document.querySelector('.descriptions')
+        const Infor =  document.querySelector('.infor')
+        async function PostToSheet() {
+            
+            let items = {
+                "name_product" : NameProduct.value,
+                "brand" : Brand.value,
+                "colllections" : Collections.value,                                            
+                "picture" : Picture.value,
+                "descriptions" : Descriptions.value,
+                "infor" : Infor.value,
+                
+            }
+            try {
+                const response = await fetch("https://literate-space-telegram-7jr4g4wp9j7fpjvv-5000.app.github.dev/new-products", {
+                method: "POST", // or 'PUT'
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(items),
+                });
+
+                const result = await response.json();
+                console.log("Success:", result);
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+            
+        
+        
+    </script>
+</body>
+</html>
