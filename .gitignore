@@ -3371,3 +3371,15 @@ node_modules/yallist/LICENSE
 node_modules/yallist/package.json
 node_modules/yallist/README.md
 node_modules/yallist/yallist.js
+node_modules/base64-arraybuffer/CHANGELOG.md
+node_modules/base64-arraybuffer/LICENSE
+node_modules/base64-arraybuffer/package.json
+node_modules/base64-arraybuffer/README.md
+node_modules/base64-arraybuffer/rollup.config.ts
+node_modules/base64-arraybuffer/dist/base64-arraybuffer.es5.js
+node_modules/base64-arraybuffer/dist/base64-arraybuffer.es5.js.map
+node_modules/base64-arraybuffer/dist/base64-arraybuffer.umd.js
+node_modules/base64-arraybuffer/dist/base64-arraybuffer.umd.js.map
+node_modules/base64-arraybuffer/dist/lib/index.js
+node_modules/base64-arraybuffer/dist/lib/index.js.map
+node_modules/base64-arraybuffer/dist/types/index.d.ts

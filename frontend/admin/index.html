@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://kit.fontawesome.com/493cf92c43.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body>
+    
+    <div style="margin: 2em;">
+        <form>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Tên sản phẩm</label>
+                <input type="email" class="form-control" id="name-product" aria-describedby="emailHelp" placeholder="Apple Vision Pro">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Tên thương hiệu</label>
+                <input type="email" class="form-control" id="name-brand" aria-describedby="emailHelp" placeholder="Apple Inc">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Thêm danh mục</label>
+
+                <input type="email" class="form-control" id="name-collection" aria-describedby="emailHelp" placeholder="đồ chống thấm">
+                <div id="emailHelp" class="form-text">Mỗi danh mục cách nhau 1 dấu ; <span style="font-weight: 500;">không bắt buộc điền</span></div>
+            </div>
+            <div class="mb-3">
+                <label for="formFileMultiple" class="form-label">Thêm Ảnh</label>
+                <br>
+                <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg, image/gif" multiple>
+                <label for="file-input" id="upload-button">Chọn ảnh</label>
+                <div id="file-drop-area">
+                  <span>Kéo thả ảnh vào đây</span>
+                </div>
+              
+                <div id="image-container"></div>
+              </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Sản phâm ưu tiên</label>
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="SendToApi()">Đăng sản phẩm</button>
+        </form>
+    </div>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            color: black;
+        }
+        #image-container {
+      display: flex;
+      flex-wrap: wrap;
+      background-color: #e9ecef;
+      border-radius: 10px;
+      align-items: center;
+
+    }
+    #file-drop-area {
+      border: 2px dashed #ccc;
+      padding: 50px;
+      cursor: pointer;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    #file-drop-area span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .uploaded-image {
+      position: relative;
+      margin: 10px;
+      overflow: hidden;
+      width: 200px;
+      height: 200px;
+      border-radius: 10px;
+
+
+    }
+
+    .uploaded-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+
+    }
+    .uploaded-image .file-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      padding: 5px;
+      font-size: 12px;
+    }
+
+    .delete-button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+
+      color: white;
+      border: none;
+      border-radius: 10px;
+    }
+    .delete-button span {
+     
+      padding: 5px;
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    #upload-button {
+      margin-top: 10px;
+      cursor: pointer;
+      padding: 5px;
+      background-color: #1a56db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    </style>
+
+</body>
+<script>
+     const fileDropArea = document.getElementById('file-drop-area');
+    const fileInput = document.getElementById('file-input');
+
+    fileDropArea.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      fileDropArea.style.border = '2px solid #4CAF50';
+    });
+
+    fileDropArea.addEventListener('dragleave', function () {
+      fileDropArea.style.border = '2px dashed #ccc';
+    });
+
+    fileDropArea.addEventListener('drop', function (e) {
+      e.preventDefault();
+      fileDropArea.style.border = '2px dashed #ccc';
+      handleFileSelect(e);
+    });
+
+    fileInput.addEventListener('change', handleFileSelect);
+    // function readFileAsBase64(file) {
+    //         return new Promise((resolve, reject) => {
+    //             const reader = new FileReader();
+
+    //             reader.onload = () => {
+    //                 resolve(reader.result.split(',')[1]);
+    //             };
+
+    //             reader.onerror = (error) => {
+    //                 reject(error);
+    //             };
+
+    //             reader.readAsDataURL(file);
+    //         });
+    // }
+    async function handleFileSelect(event) {
+      const files = event.target.files || event.dataTransfer.files;
+      const imageContainer = document.getElementById('image-container');
+
+      if (!files) return;
+
+      if (imageContainer.children.length + files.length > 5) {
+        // alert('Chỉ được tải lên tối đa 5 ảnh.');
+        // return;
+      }
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        if (file) {
+          // const base64Image = await readFileAsBase64(file);
+          // console.log(base64Image)
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            const imageUrl = e.target.result;
+            const fileName = generateFileName();
+            displayImage(imageUrl, fileName);
+          };
+
+          reader.readAsDataURL(file);
+        }
+        
+      }
+      Toastify({
+        text: "List ảnh được cập nhập thành công",
+        duration: 3000,
+        destination: "https://github.com/apvarun/toastify-js",
+        newWindow: true,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+        },
+        onClick: function(){} // Callback after click
+      }).showToast();
+      
+    }
+
+    function generateFileName() {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let fileName = '';
+
+      for (let i = 0; i < 5; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        fileName += characters.charAt(randomIndex);
+      }
+
+      return fileName;
+    }
+
+    function displayImage(imageUrl, fileName) {
+      const imageContainer = document.getElementById('image-container');
+
+      const uploadedImage = document.createElement('div');
+      uploadedImage.className = 'uploaded-image';
+
+      const img = document.createElement('img');
+      img.className = fileName
+      img.src = imageUrl;
+
+      const fileNameDiv = document.createElement('div');
+      fileNameDiv.className = 'file-name';
+      fileNameDiv.textContent = 'ID ảnh 🎉: #' + fileName;
+
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'delete-button';
+      deleteButton.innerHTML = '<span><i class="fa-solid fa-x"></i></span>';
+      deleteButton.addEventListener('click', function () {
+        imageContainer.removeChild(uploadedImage);
+      });
+
+      uploadedImage.appendChild(img);
+      uploadedImage.appendChild(fileNameDiv);
+      uploadedImage.appendChild(deleteButton);
+      imageContainer.appendChild(uploadedImage);
+
+    }
+    function SendToApi() {
+      event.preventDefault();
+      const imageContainer = document.getElementById('image-container');
+      const images = imageContainer.getElementsByClassName('uploaded-image');
+      const NameProduct = document.querySelector("#name-product")
+      const NameBrand = document.querySelector("#name-brand")
+      const Collection = document.querySelector("#name-collection")
+      let ListFileName = []
+      for (let i = 0; i < images.length; i++) {
+          const imageElement = images[i];
+          const img = imageElement.getElementsByTagName('img')[0];
+          const fileName = img.className;
+          const base64Image = img.src.split(',')[1];
+          ListFileName.push(fileName)
+
+          // Tạo đối tượng chứa thông tin ảnh
+          // const imageInfo = {
+          //     fileName: fileName,
+          //     base64Image: base64Image,
+          // };
+          
+          // Gửi từng ảnh lên API dưới dạng JSON
+          // sendImageToApi(fileName,base64Image);
+
+      }
+      if (ListFileName.length <= 0 || NameProduct.value == '' || NameBrand.value == '') {
+        Toastify({
+          text: "List hình ảnh hoặc các ô cần điền còn rỗng",
+          duration: 3000,
+          newWindow: true,
+          close: true,
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, #ff930f, #fff95b)",
+          },
+          onClick: function(){} // Callback after click
+        }).showToast();
+        return
+      }
+      // sendInfoProductToApi(NameProduct.value,NameBrand.value,Collection.value,ListFileName)
+      document.getElementById('name-product').value = '';
+      document.getElementById('name-brand').value = '';
+      document.getElementById('name-collection').value = '';
+      document.getElementById('file-input').value = '';
+      document.getElementById('image-container').innerHTML = ''; // Xóa danh sách ảnh
+      document.getElementById('exampleCheck1').checked = false; // Uncheck checkbox
+      console.log(ListFileName)
+    }
+
+    function sendImageToApi(filename,filedata) {
+      const apiUrl = 'https://literate-space-telegram-7jr4g4wp9j7fpjvv-5000.app.github.dev/storage';
+      const requestBody = JSON.stringify({
+        filename:filename,
+        data:filedata,
+      });
+
+      fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: requestBody,
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('API Response:', data);
+          Toastify({
+            text: "ID :"+filename+" tải lên thành công",
+            duration: 3000,
+            destination: "https://github.com/apvarun/toastify-js",
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+            onClick: function(){} // Callback after click
+          }).showToast();
+          // Xử lý phản hồi từ API tại đây (nếu cần)
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          // Xử lý lỗi tại đây (nếu cần)
+      });
+    }
+    function sendInfoProductToApi(name_product,name_brand,name_collection,list_image) {
+      event.preventDefault();
+      let data = {
+            name_product : name_product,
+            brand : name_brand,
+            collection : name_collection,                                            
+            picture : list_image,
+            descriptions : '',
+            infor : '',
+      }
+      
+      fetch('https://literate-space-telegram-7jr4g4wp9j7fpjvv-5000.app.github.dev/new-products', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('API Response:', data);
+          Toastify({
+            text: "Đăng sản phẩm thành công",
+            duration: 3000,
+            destination: "https://github.com/apvarun/toastify-js",
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+            onClick: function(){} // Callback after click
+          }).showToast();
+
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          // Xử lý lỗi tại đây (nếu cần)
+      });
+    }
+
+    
+</script>
+</html>

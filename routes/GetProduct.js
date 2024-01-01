@@ -7,15 +7,16 @@ export async function GetProduct(id,callback) {
         const { data, error } = await supabase
           .from('products')
           .select('*')
-        //   .eq('id', 1);
+          .eq('id_product', id_product);
         if (error) {
           throw error;
         }
     
         // In ra thông tin lấy được
-        console.log('Info:', data);
+        // console.log('Info:', data);
+        callback(data)
       } catch (error) {
         console.error('Error getting info:', error.message);
+        // callback(error.message)
       }
 }
-GetProduct()
